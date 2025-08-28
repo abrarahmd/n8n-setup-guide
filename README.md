@@ -6,6 +6,8 @@ This guide explains how to install and set up a local instance of n8n for workfl
 
 * Node.js and npm installed on your system.
 
+![Download Node.js](https://nodejs.org/en/download/)
+
 ## Setup n8n with npm
 
 1.  **Install n8n** using npm.
