@@ -1,34 +1,132 @@
-# n8n Setup Guide
+# 🚀 n8n Setup Guide (Windows)
 
-This guide explains how to install and set up a local instance of n8n for workflow automation.
+This guide explains **two ways** to install and run n8n:  
+1. **Docker (recommended for teams & production)**  
+2. **npm (simpler, good for testing/development)**  
 
-## Prerequisites
+---
 
-* Node.js and npm installed on your system.
+## 📌 Prerequisites
 
-    [Download Node.js](https://nodejs.org/en/download/)
+- **For Docker setup**  
+  - [Docker Desktop](https://www.docker.com/products/docker-desktop) installed  
+  - WSL2 enabled  
 
-## Setup n8n with npm
+- **For npm setup**  
+  - [Node.js (LTS)](https://nodejs.org/en/download/) installed  
+  - npm installed with Node.js  
 
-1.  **Install n8n** using npm.
+---
 
-    ```
-    npm install n8n -g
-    ```
+## ⚡ Option 1: Setup n8n with Docker (Recommended)
 
-2.  **Start n8n** for the first time. This will prompt you to create an owner account and set up your initial instance.
+### 1. Create project folder
+```powershell
+mkdir "F:\n8n-server\n8n"
+cd "F:\n8n-server\n8n"
+```
+### 2. Create .env file
+```bash
+# ----- n8n base URLs -----
+N8N_HOST=192.168.0.184   # Use your LAN IP so other devices can access
+N8N_PORT=5678
+N8N_PROTOCOL=http
+WEBHOOK_URL=http://192.168.0.184/
 
-    ```
-    n8n
-    ```
+# ----- login gate for the UI -----
+N8N_BASIC_AUTH_ACTIVE=true
+N8N_BASIC_AUTH_USER=admin
+N8N_BASIC_AUTH_PASSWORD=SuperStrongPass123!
 
-    * **Sign up:** Follow the on-screen instructions in your web browser to create your n8n account.
+# ----- database (Postgres) -----
+DB_TYPE=postgresdb
+DB_POSTGRESDB_HOST=postgres
+DB_POSTGRESDB_PORT=5432
+DB_POSTGRESDB_DATABASE=n8n
+DB_POSTGRESDB_USER=n8n
+DB_POSTGRESDB_PASSWORD=AnotherStrongDBpass456!
 
-    * **Create `.env` file:** Once you've created your account, you will need to create a `.env` file in your n8n directory to store your credentials. This file is crucial for securely storing login information.
-        ![Example of a .env file](env_file_format.png)
+# ----- timezone & runners -----
+GENERIC_TIMEZONE=Asia/Dhaka
+N8N_RUNNERS_ENABLED=true
+N8N_SECURE_COOKIE=false
+```
+### 3. Create docker-compose.yml
+```bash
+version: "3.8"
+services:
+  postgres:
+    image: postgres:14
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_POSTGRESDB_USER}
+      POSTGRES_PASSWORD: ${DB_POSTGRESDB_PASSWORD}
+      POSTGRES_DB: ${DB_POSTGRESDB_DATABASE}
+    volumes:
+      - c:/n8n/data/postgres:/var/lib/postgresql/data
 
-3.  **Rerun n8n** after creating the `.env` file. n8n will now use the credentials from the `.env` file for future startups.
+  n8n:
+    image: n8nio/n8n:latest
+    restart: always
+    env_file:
+      - ./.env
+    ports:
+      - "5678:5678"
+    volumes:
+      - c:/n8n/data/n8n:/home/node/.n8n
+    depends_on:
+      - postgres
+```
+### 4. Start n8n
+```bash
+docker compose up -d
+```
+Open in browser:
+```bash
+http://192.168.0.184:5678
+```
+Login with username and password.
+### 5. Verify running containers
+```bash
+docker ps
+```
 
-    ```
-    n8n
-    ```
+## ⚡ Option 2: Setup n8n with npm (Quick Test)
+### 1. Install n8n globally
+```powershell
+npm install -g n8n
+```
+### 2. Start n8n
+```powershell
+n8n
+```
+A browser window will open asking you to sign up and create your account.
+### 3. Create .env file
+```env
+N8N_BASIC_AUTH_ACTIVE=true
+N8N_BASIC_AUTH_USER=admin
+N8N_BASIC_AUTH_PASSWORD=SuperStrongPass123!
+```
+### 4. Restart n8n
+```powershell
+n8n
+```
+## 🔥 Firewall Setup (LAN Access)
+If you want others in your office LAN to access n8n:
+1. Press Win + R, type wf.msc, hit Enter.
+2. Go to Inbound Rules → New Rule.
+3. Select Port → TCP → Specific local ports: 5678.
+4. Choose Allow the connection.
+5. Apply to Domain, Private, Public.
+6. Name it: n8n port 5678.
+
+Now colleagues can access:
+👉 http://<YOUR_LAN_IP>:5678
+
+## ✅ Testing persistence
+Run:
+```powershell
+docker compose down
+docker compose up -d
+```
+Verify your workflows are still saved (Postgres stores them).
