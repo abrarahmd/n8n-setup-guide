@@ -1,4 +1,4 @@
-# 🚀 n8n Setup Guide (Windows)
+# n8n Setup Guide
 
 This guide explains **two ways** to install and run n8n:  
 1. **Docker (recommended for teams & production)**  
@@ -6,7 +6,7 @@ This guide explains **two ways** to install and run n8n:
 
 ---
 
-## 📌 Prerequisites
+## Prerequisites
 
 - **For Docker setup**  
   - [Docker Desktop](https://www.docker.com/products/docker-desktop) installed  
@@ -18,7 +18,7 @@ This guide explains **two ways** to install and run n8n:
 
 ---
 
-## ⚡ Option 1: Setup n8n with Docker (Recommended)
+## Option 1: Setup n8n with Docker (Recommended)
 
 ### 1. Create project folder
 ```powershell
@@ -95,7 +95,7 @@ Login with username and password.
 docker ps
 ```
 
-## ⚡ Option 2: Setup n8n with npm (Quick Test)
+## Option 2: Setup n8n with npm (Quick Test)
 ### 1. Install n8n globally
 ```powershell
 npm install -g n8n
@@ -140,7 +140,7 @@ Now people can access:
 ```bash
 http://<YOUR_LAN_IP>:5678
 ```
-## ✅ Testing persistence
+## Testing persistence
 Run:
 ```powershell
 docker compose down
