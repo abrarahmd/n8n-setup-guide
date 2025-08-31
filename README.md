@@ -28,7 +28,7 @@ cd "n8n-server\n8n"
 ### 2. Create .env file
 ```bash
 # ----- n8n base URLs -----
-N8N_HOST=   # Use your LAN IP so other devices can access
+N8N_HOST= <Your LAN IP>
 N8N_PORT=5678
 N8N_PROTOCOL=http
 WEBHOOK_URL=http://<Your LAN IP>/
@@ -64,6 +64,8 @@ services:
       POSTGRES_DB: ${DB_POSTGRESDB_DATABASE}
     volumes:
       - c:/n8n/data/postgres:/var/lib/postgresql/data
+      # For linux, uses absolute paths like:
+      # - /home/<User>/n8n/data/n8n:/home/node/.n8n
 
   n8n:
     image: n8nio/n8n:latest
@@ -74,6 +76,8 @@ services:
       - "5678:5678"
     volumes:
       - c:/n8n/data/n8n:/home/node/.n8n
+      # For linux, use absolute paths, like:
+      # - /home/<User>/n8n/data/n8n:/home/node/.n8n
     depends_on:
       - postgres
 ```
@@ -111,7 +115,8 @@ N8N_BASIC_AUTH_PASSWORD= <Your Password>
 ```powershell
 n8n
 ```
-## 🔥 Firewall Setup (LAN Access)
+## Firewall Setup (LAN Access)
+### Windows:
 If you want others in your office LAN to access n8n:
 1. Press Win + R, type wf.msc, hit Enter.
 2. Go to Inbound Rules → New Rule.
@@ -119,6 +124,17 @@ If you want others in your office LAN to access n8n:
 4. Choose Allow the connection.
 5. Apply to Domain, Private, Public.
 6. Name it: n8n port 5678.
+### Linux:
+(Ubuntu/Debian):
+```bash
+sudo ufw allow 5678/tcp
+sudo ufw reload
+```
+(CentOS/RHEL):
+```bash
+sudo firewall-cmd --permanent --add-port=5678/tcp
+sudo firewall-cmd --reload
+```
 
 Now people can access:
 ```bash
