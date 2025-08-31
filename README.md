@@ -22,21 +22,21 @@ This guide explains **two ways** to install and run n8n:
 
 ### 1. Create project folder
 ```powershell
-mkdir "F:\n8n-server\n8n"
-cd "F:\n8n-server\n8n"
+mkdir "n8n-server\n8n"
+cd "n8n-server\n8n"
 ```
 ### 2. Create .env file
 ```bash
 # ----- n8n base URLs -----
-N8N_HOST=192.168.0.184   # Use your LAN IP so other devices can access
+N8N_HOST=   # Use your LAN IP so other devices can access
 N8N_PORT=5678
 N8N_PROTOCOL=http
-WEBHOOK_URL=http://192.168.0.184/
+WEBHOOK_URL=http://<Your LAN IP>/
 
 # ----- login gate for the UI -----
 N8N_BASIC_AUTH_ACTIVE=true
-N8N_BASIC_AUTH_USER=admin
-N8N_BASIC_AUTH_PASSWORD=SuperStrongPass123!
+N8N_BASIC_AUTH_USER= <Your Username>
+N8N_BASIC_AUTH_PASSWORD= <Your Password>
 
 # ----- database (Postgres) -----
 DB_TYPE=postgresdb
@@ -44,7 +44,7 @@ DB_POSTGRESDB_HOST=postgres
 DB_POSTGRESDB_PORT=5432
 DB_POSTGRESDB_DATABASE=n8n
 DB_POSTGRESDB_USER=n8n
-DB_POSTGRESDB_PASSWORD=AnotherStrongDBpass456!
+DB_POSTGRESDB_PASSWORD= <Your Password>
 
 # ----- timezone & runners -----
 GENERIC_TIMEZONE=Asia/Dhaka
@@ -83,7 +83,7 @@ docker compose up -d
 ```
 Open in browser:
 ```bash
-http://192.168.0.184:5678
+http://<Your IPV4 Address>:5678
 ```
 Login with username and password.
 ### 5. Verify running containers
@@ -104,8 +104,8 @@ A browser window will open asking you to sign up and create your account.
 ### 3. Create .env file
 ```env
 N8N_BASIC_AUTH_ACTIVE=true
-N8N_BASIC_AUTH_USER=admin
-N8N_BASIC_AUTH_PASSWORD=SuperStrongPass123!
+N8N_BASIC_AUTH_USER= <Your Username>
+N8N_BASIC_AUTH_PASSWORD= <Your Password>
 ```
 ### 4. Restart n8n
 ```powershell
@@ -120,9 +120,10 @@ If you want others in your office LAN to access n8n:
 5. Apply to Domain, Private, Public.
 6. Name it: n8n port 5678.
 
-Now colleagues can access:
-👉 http://<YOUR_LAN_IP>:5678
-
+Now people can access:
+```bash
+http://<YOUR_LAN_IP>:5678
+```
 ## ✅ Testing persistence
 Run:
 ```powershell
